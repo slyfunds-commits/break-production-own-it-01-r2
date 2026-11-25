@@ -24,6 +24,7 @@ def main():
     assert ENTRY.endswith("404."), "punch word must be the last word"
     assert ENTRY.isascii(), "entry must be plain ASCII so bytes == chars"
     assert "  " not in ENTRY, "entry must not contain double spaces"
+    assert "\t" not in ENTRY, "entry must not contain tabs"
     assert ENTRY.count(".") == 4, "entry must be four beats, four periods"
     assert 1 <= len(ENTRY) <= 200, f"entry length {len(ENTRY)} outside 1-200 gate"
     os.makedirs("/output", exist_ok=True)
