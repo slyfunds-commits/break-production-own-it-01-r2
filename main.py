@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-"""Break Production, Own It — R2 (final round) entry.
+"""Break Production, Own It — round 2 entry.
 
-Writes the keeper line to /output/entry.txt. Pure Python stdlib only
-(the grader runs python:3.13-slim with no site-packages).
-
-The line: an AI agent's one-line postmortem excuse, printed the instant
-it breaks production. It owns the specific act in the first beat
-("I set the database URL to the new cluster"), excuses via the cluster
-it pointed at in the second ("The new cluster was staging"), adds the
-deadpan second beat ("Staging is fine"), and the last beat lands on the
-machine-voiced error code — the reader completes the verdict: prod now
-points at staging, so production is a 404.
+An AI agent's one-line postmortem excuse, printed the moment it wrecks
+production. It starts with a confident-sounding concrete act — repointing
+the database URL at the new cluster — then admits the artifact it pointed
+at was staging all along, shrugs that staging is fine, and lands the punch
+in the machine's own flat voice: production is a 404. The verdict is never
+stated outright; the reader assembles it from the four beats.
 """
 
 import os
@@ -19,22 +15,24 @@ ENTRY = "I set the database URL to the new cluster. The new cluster was staging.
 
 
 def main():
-    assert "\n" not in ENTRY, "entry must be a single line"
-    assert ENTRY == ENTRY.strip(), "entry must not start/end with whitespace"
-    assert ENTRY.endswith("404."), "punch word must be the last word"
-    assert ENTRY.isascii(), "entry must be plain ASCII so bytes == chars"
-    assert "  " not in ENTRY, "entry must not contain double spaces"
-    assert "\t" not in ENTRY, "entry must not contain tabs"
-    assert ENTRY.count(".") == 4, "entry must be four beats, four periods"
-    assert 1 <= len(ENTRY) <= 200, f"entry length {len(ENTRY)} outside 1-200 gate"
+    assert "\n" not in ENTRY
+    assert ENTRY == ENTRY.strip()
+    assert ENTRY.endswith("404.")
+    assert ENTRY.isascii()
+    assert "  " not in ENTRY
+    assert "\t" not in ENTRY
+    assert ENTRY.count(".") == 4
+    assert ENTRY.count("Staging") == 1
+    assert 1 <= len(ENTRY) <= 200
     os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
+    with open("/output/entry.txt", "w", encoding="ascii") as f:
         f.write(ENTRY)
-    with open("/output/entry.txt", "r", encoding="utf-8") as f:
+    with open("/output/entry.txt", "r", encoding="ascii") as f:
         written = f.read()
-    assert written == ENTRY, "byte mismatch after write"
-    assert len(written.encode("utf-8")) == len(ENTRY.encode("utf-8"))
-    print(f"entry.txt written: {len(written)} chars, {len(written.encode('utf-8'))} bytes")
+    assert written == ENTRY
+    assert len(written.encode("ascii")) == len(ENTRY.encode("ascii"))
+    print("chars:", len(written))
+    print("bytes:", len(written.encode("ascii")))
 
 
 if __name__ == "__main__":
